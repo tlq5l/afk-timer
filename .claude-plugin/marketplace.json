@@ -1,0 +1,13 @@
+{
+  "name": "afk-timer",
+  "description": "afk-timer: an AFK and prompt-cache timer above the Claude Code prompt",
+  "owner": {
+    "name": "tlq5l"
+  },
+  "plugins": [
+    {
+      "name": "afk-timer",
+      "source": "./"
+    }
+  ]
+}

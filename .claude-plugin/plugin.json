@@ -1,1 +1,18 @@
-{ "name": "afk-timer", "version": "0.1.0", "description": "Shows how long you have been away from a session once you stop touching it", "author": { "name": "tlq5l" }, "types": "./types/index.d.ts" }
+{
+  "name": "afk-timer",
+  "version": "0.2.0",
+  "description": "Shows how long you have been away from a Claude Code session and warns when its prompt cache has likely expired, so you can /clear instead of paying to re-read a big conversation",
+  "author": { "name": "tlq5l" },
+  "license": "MIT",
+  "repository": "https://github.com/tlq5l/afk-timer",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "cacheTtl": {
+      "type": "string",
+      "title": "Prompt cache lifetime",
+      "description": "auto: 1 h when the session runs on a Claude subscription (plan rate limits reported), else 5 min. Pick 1h or 5m to pin it, for example 1h if you set promptCacheTtl to 1h on an API key, or 5m once a subscription draws on usage credits.",
+      "default": "auto",
+      "options": ["auto", "1h", "5m"]
+    }
+  }
+}
