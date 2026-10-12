@@ -35,7 +35,7 @@ In Claude Code running in a terminal, type:
 /plugin install afk-timer --marketplace tlq5l/afk-timer
 ```
 
-Press `y` to add the marketplace, then Enter to install for your user. It starts working right away. The desktop app's Code tab doesn't accept that command, but once you install it from a terminal the line shows there too.
+Press `y` to add the marketplace, then Enter to install for your user. If it asks about the one setting, or says an option isn't set, leave it: it uses `auto`. It starts working right away. The desktop app's Code tab doesn't accept that command, but once you install it from a terminal the line shows there too.
 
 It needs a Claude Code version with function-hook mods (early access; built and tested on 2.1.296).
 
