@@ -1,0 +1,1 @@
+{ "name": "afk-timer", "version": "0.1.0", "description": "Shows how long you have been away from a session once you stop touching it", "author": { "name": "tlq5l" }, "types": "./types/index.d.ts" }
