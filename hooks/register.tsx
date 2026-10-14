@@ -199,11 +199,14 @@ export const register: Register = (on, options) => {
     const cached = await read($, cacheView)
     const expired = cached?.kind === 'expired' ? cached : null
     if (e.props.hasSurvey || (afk == null && expired == null)) return next(e)
+    // Mods beneath still draw: "You should know" starts its checks on a non-terminal screen only once its own render runs.
+    const below = await next(e)
     const { Box, Text } = $.ui.resolve(e)
     return (
       <Box flexDirection="column">
         {afk && <Text key="afk" dimColor={afk.kind === 'back'}>{afkLine(afk, cached)}</Text>}
         {expired && <Text key="cache" color="warning">{cacheLine(expired)}</Text>}
+        {below}
       </Box>
     )
   })
