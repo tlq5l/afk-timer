@@ -255,3 +255,25 @@ describe('afk-timer', () => {
     expect(formatGap(120)).toBe('2 h 0 min')
   })
 })
+
+// Stands in for a built-in mod beneath this one that draws its own AbovePrompt line, as "You should know" does.
+const modBelow = {
+  name: 'cc-plugin-you-should-know',
+  tier: 'builtin' as const,
+  register(on: On) {
+    on('ui.render', { component: 'AbovePrompt' } as never, (() => ({ type: 'Text', children: ['From the mod below'] })) as never)
+  },
+}
+
+describe('mods beneath the band', () => {
+  test('still draw while the AFK line shows', { plugins: [modBelow] } as never, async ($: Engine, on: On) => {
+    const clock = await begin($, on)
+    await clock.advance(AWAY_AFTER_MS)
+    for (const surface of SURFACES) {
+      const ui = await mountBand($, surface)
+      expect((await ui.find({ type: 'Text', text: /AFK/ }))?.text).toBe('AFK for 5 min')
+      expect(await ui.find({ type: 'Text', text: 'From the mod below' })).toBeDefined()
+      await ui.unmount()
+    }
+  })
+})
