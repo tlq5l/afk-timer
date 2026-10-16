@@ -68,7 +68,7 @@ const turn = async ($: Engine, turnId: string, agentId?: string) => {
   await $.turn.complete({ answer: 'done', durationMs: 1000, isAborted: false, turnId, reason: 'answer', ...(agentId ? { agentId } : {}) })
 }
 
-const EXPIRED_1H = 'Cache likely expired (last reply 1 h 0 min ago): your next message re-reads ~182k tokens at full price. New task? /clear first.'
+const EXPIRED_1H = 'Cache likely expired (last reply 1 h 0 min ago): your next message re-reads ~182k tokens at full price. Same task? Carry on. New task? /clear first, it costs under half as much.'
 
 describe('afk-timer', () => {
   test('under the threshold nothing of the mod is drawn', async ($, on) => {
@@ -231,9 +231,16 @@ describe('afk-timer', () => {
       await $.classic.SessionStart({ source: 'clear' })
       await $.classic.SessionStart({ source, seconds_since_last_response: 3 * 3600, context_tokens: 95_000, prompt_cache_likely_expired: true })
       for (const surface of SURFACES) {
-        expect((await linesOn($, surface)).cache).toBe('Cache likely expired (last reply 3 h 0 min ago): your next message re-reads ~95k tokens at full price. New task? /clear first.')
+        expect((await linesOn($, surface)).cache).toBe('Cache likely expired (last reply 3 h 0 min ago): your next message re-reads ~95k tokens at full price. Same task? Carry on. New task? /clear first, it costs under half as much.')
       }
     }
+  })
+
+  test('a small conversation that went cold gets a calm line instead of the /clear advice', async ($, on) => {
+    fakeEngine(on, [])
+    await $.session.start({ cwd: '/work/afk', surface: 'terminal', isInteractive: true })
+    await $.classic.SessionStart({ source: 'resume', seconds_since_last_response: 2 * 3600, context_tokens: 40_000, prompt_cache_likely_expired: true })
+    expect((await linesOn($, 'terminal')).cache).toBe('Cache likely expired (last reply 2 h 0 min ago), but the conversation is small (~40k tokens): carrying on costs little.')
   })
 
   test('resuming a session the engine says is still warm after 20 min counts down the 1 h cache', async ($, on) => {

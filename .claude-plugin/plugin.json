@@ -1,6 +1,6 @@
 {
   "name": "afk-timer",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Shows how long you have been away from a Claude Code session and warns when its prompt cache has likely expired, so you can /clear instead of paying to re-read a big conversation",
   "author": {
     "name": "tlq5l"

@@ -8,6 +8,8 @@ export const TICK_MS = 15_000
 export const TOUCH_THROTTLE_MS = 5_000
 // How long Claude Code's main conversation stays cached after Claude's last reply: 1 h on a subscription within plan usage, 5 min otherwise.
 export const CACHE_TTL_MS = { '5m': 5 * 60_000, '1h': 60 * 60_000 } as const
+// A fresh session already starts near this size (system prompt, tools, CLAUDE.md), so below it /clear saves little.
+export const SMALL_CONTEXT_TOKENS = 60_000
 
 export const formatGap = (minutes: number): string => {
   if (minutes < 60) return `${minutes} min`
@@ -22,9 +24,14 @@ export const afkLine = (afk: NonNullable<AfkView>, cache: CacheView): string => 
   return `AFK for ${formatGap(afk.minutes)}${warm}`
 }
 
+export const isSmallContext = (cache: Extract<CacheView, { kind: 'expired' }>): boolean =>
+  cache.tokens != null && cache.tokens < SMALL_CONTEXT_TOKENS
+
 export const cacheLine = (cache: Extract<CacheView, { kind: 'expired' }>): string => {
+  const since = `Cache likely expired (last reply ${formatGap(cache.minutesSince)} ago)`
+  if (isSmallContext(cache)) return `${since}, but the conversation is small (~${formatTokens(cache.tokens ?? 0)} tokens): carrying on costs little.`
   const size = cache.tokens == null ? 'the whole conversation' : `~${formatTokens(cache.tokens)} tokens`
-  return `Cache likely expired (last reply ${formatGap(cache.minutesSince)} ago): your next message re-reads ${size} at full price. New task? /clear first.`
+  return `${since}: your next message re-reads ${size} at full price. Same task? Carry on. New task? /clear first, it costs under half as much.`
 }
 
 const lastTouchAt = atom({ plugin: 'afk-timer', key: 'lastTouchAt' } as const, null)
@@ -205,7 +212,7 @@ export const register: Register = (on, options) => {
     return (
       <Box flexDirection="column">
         {afk && <Text key="afk" dimColor={afk.kind === 'back'}>{afkLine(afk, cached)}</Text>}
-        {expired && <Text key="cache" color="warning">{cacheLine(expired)}</Text>}
+        {expired && <Text key="cache" color={isSmallContext(expired) ? undefined : 'warning'} dimColor={isSmallContext(expired)}>{cacheLine(expired)}</Text>}
         {below}
       </Box>
     )

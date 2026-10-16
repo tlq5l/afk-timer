@@ -7,7 +7,7 @@ AFK for 23 min · cache expires in 37 min
 ```
 
 ```
-Cache likely expired (last reply 1 h 0 min ago): your next message re-reads ~182k tokens at full price. New task? /clear first.
+Cache likely expired (last reply 1 h 0 min ago): your next message re-reads ~182k tokens at full price. Same task? Carry on. New task? /clear first, it costs under half as much.
 ```
 
 ## Why it exists
@@ -24,6 +24,13 @@ So when the warning is up:
 - **Starting something new?** Run `/clear` first. The old conversation isn't sent again.
 - **Need the old context?** Just carry on. You pay the full price once, then it's cached again.
 - `/compact` doesn't help here. It re-reads the whole conversation to summarize it, so it costs the same.
+- **Small conversation (under ~60k tokens)?** It doesn't matter much. A fresh session starts at about that size anyway, so the line turns calm and drops the advice.
+
+These rules come from 30 days of one heavy user's sessions (1,341 idle gaps of an hour or more):
+
+- Over the next 10 messages, resuming a cold session cost about 2.4 times what a fresh session did (medians, API list prices).
+- All cold resumes together were under 3% of total usage, so carrying on when you need the old context is fine.
+- Compacting while away didn't pay for itself. Claude Code's own idle compaction fired only in the terminal, and the first message back still missed the cache.
 
 The details are in Claude Code's [prompt caching docs](https://code.claude.com/docs/en/prompt-caching).
 
@@ -43,7 +50,7 @@ It needs a Claude Code version with function-hook mods (early access; built and 
 
 - **`AFK for 23 min · cache expires in 37 min`**: you haven't typed, sent or clicked anything for 5 minutes. The two numbers count from different moments: AFK from your last action, the cache from Claude's last reply.
 - **`You were AFK for 23 min`** (dim): shown for 10 seconds when you come back.
-- **`Cache likely expired …`**: shown once the cache has likely lapsed, including right after you resume an old session. It stays while you type and goes away when you send your next message, `/clear` or `/compact`.
+- **`Cache likely expired …`**: shown once the cache has likely lapsed (dim and calm when the conversation is small), including right after you resume an old session. It stays while you type and goes away when you send your next message, `/clear` or `/compact`.
 
 ## Settings
 
