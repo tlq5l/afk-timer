@@ -71,7 +71,7 @@ claude plugin uninstall afk-timer@afk-timer
 
 ## Limits
 
-- It estimates. A mod can't read the cache's real lifetime, so `auto` guesses from your account type. When you resume a session it uses Claude Code's own verdict instead.
+- It estimates. A mod can't read the cache's real lifetime, so `auto` guesses from your account type. When you resume a session it uses Claude Code's own verdict instead. [How the cache timer works](docs/how-the-cache-timer-works.md?ref=afk-timer-cache-expiry-explainer) explains the estimate.
 - Only the main conversation counts. Subagents keep caches of their own.
 - The token count is the size of the conversation at Claude's last reply, rounded.
 - Watching a long reply without touching anything counts as AFK.
