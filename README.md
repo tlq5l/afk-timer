@@ -29,7 +29,7 @@ It needs a Claude Code version with function-hook mods (early access; built and 
 - **`AFK for 23 min · cache expires in 37 min`**: you haven't typed, sent or clicked anything for 5 minutes. The two numbers count from different moments: AFK from your last action, the cache from Claude's last reply.
 - **`You were AFK for 23 min`** (dim): shown for 10 seconds when you come back.
 - **`Cache likely expired …`**: shown once the cache has likely lapsed (dim and calm when the conversation is small), including right after you resume an old session. It stays while you type and goes away when you send your next message, `/clear` or `/compact`.
-  - It means Claude has likely lost its quick-reuse copy of your conversation, so your next message costs more than usual.
+  - It means Claude has likely lost its quick-reuse copy of your conversation, so your next message may cost more than usual. This is an estimate; the plugin can't see the real cache.
   - Starting something new? Type `/clear` first.
   - Need the old conversation? Just carry on. `/compact` doesn't save anything here.
   - Why? See "Why it exists" below.
@@ -65,7 +65,7 @@ claude plugin uninstall afk-timer@afk-timer
 
 ## If you don't see it
 
-- The AFK line only appears after 5 minutes with no typing, sending or clicking, so nothing shows while you are working. The cache warning is separate: it shows once the cache has likely expired.
+- The AFK line only appears after 5 minutes with no typing, sending or clicking. After you come back, "You were AFK" shows for 10 seconds. The cache warning is separate: it shows once the cache has likely expired, even while you are working.
 - Check it is installed and turned on: run `claude plugin list` in a terminal, find `afk-timer` and check its status says enabled.
 - Check your Claude Code version: run `claude --version`. It needs a version with function-hook mods (built and tested on 2.1.296).
 - Using the desktop app's Code tab? Install it from a terminal first, as described under Install. After that the line shows in the app too.
