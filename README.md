@@ -29,7 +29,7 @@ It needs a Claude Code version with function-hook mods (early access; built and 
 - **`AFK for 23 min · cache expires in 37 min`**: you haven't typed, sent or clicked anything for 5 minutes. The two numbers count from different moments: AFK from your last action, the cache from Claude's last reply.
 - **`You were AFK for 23 min`** (dim): shown for 10 seconds when you come back.
 - **`Cache likely expired …`**: shown once the cache has likely lapsed (dim and calm when the conversation is small), including right after you resume an old session. It stays while you type and goes away when you send your next message, `/clear` or `/compact`.
-  - It means Claude has likely lost its quick-reuse copy of your conversation, so your next message may cost more than usual. The warning is an estimate based on timing.
+  - It means Claude has likely lost its quick-reuse copy of your conversation, so your next message may cost more than usual. The warning is an estimate.
   - Starting something new? Type `/clear` first.
   - Need the old conversation? Just carry on. `/compact` doesn't save anything here.
   - Why? See "Why it exists" below.
