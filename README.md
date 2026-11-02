@@ -10,6 +10,66 @@ AFK for 23 min · cache expires in 37 min
 Cache likely expired (last reply 1 h 0 min ago): your next message re-reads ~182k tokens at full price. Same task? Carry on. New task? /clear first, it costs under half as much.
 ```
 
+When this warning shows, your next message may make Claude Code read your whole conversation again at full price, which uses up more of your plan. If you are starting something new, type `/clear` first. If you are continuing the same task, just carry on.
+
+## Install
+
+In Claude Code running in a terminal, type:
+
+```
+/plugin install afk-timer --marketplace tlq5l/afk-timer
+```
+
+Press `y` to add the marketplace, then Enter to install for your user. If it asks about the one setting, or says an option isn't set, leave it: it uses `auto`. It starts working right away. The desktop app's Code tab doesn't accept that command, but once you install it from a terminal the line shows there too.
+
+It needs a Claude Code version with function-hook mods (early access; built and tested on 2.1.296).
+
+## What it shows
+
+- **`AFK for 23 min · cache expires in 37 min`**: you haven't typed, sent or clicked anything for 5 minutes. The two numbers count from different moments: AFK from your last action, the cache from Claude's last reply.
+- **`You were AFK for 23 min`** (dim): shown for 10 seconds when you come back.
+- **`Cache likely expired …`**: shown once the cache has likely lapsed (dim and calm when the conversation is small), including right after you resume an old session. It stays while you type and goes away when you send your next message, `/clear` or `/compact`.
+  - It means Claude has likely lost its quick-reuse copy of your conversation, so your next message may cost more than usual. The warning is an estimate.
+  - Starting something new? Type `/clear` first.
+  - Need the old conversation? Just carry on. `/compact` doesn't save anything here.
+  - Why? See "Why it exists" below.
+
+## Settings
+
+One setting, under `/config`: **Prompt cache lifetime** (`cacheTtl`).
+
+- `auto` (default): 1 hour if your account reports plan usage limits (a subscription), otherwise 5 minutes.
+- `1h` or `5m`: pin it. Use `1h` if you set `promptCacheTtl` to `1h` on an API key. Use `5m` while your subscription is on usage credits.
+
+## Turn it off or remove it
+
+These commands are typed in a terminal, not inside Claude Code.
+
+Turn it off for now:
+
+```
+claude plugin disable afk-timer@afk-timer
+```
+
+Turn it back on:
+
+```
+claude plugin enable afk-timer@afk-timer
+```
+
+Remove it completely:
+
+```
+claude plugin uninstall afk-timer@afk-timer
+```
+
+## If you don't see it
+
+- The AFK line only appears after 5 minutes with no typing, sending or clicking. After you come back, "You were AFK" shows for 10 seconds. The cache warning is separate: it shows once the cache has likely expired, even while you are working.
+- Check it is installed and turned on: run `claude plugin list` in a terminal, find `afk-timer` and check its status says enabled.
+- Check your Claude Code version: run `claude --version`. It needs a version with function-hook mods (built and tested on 2.1.296).
+- Using the desktop app's Code tab? Install it from a terminal first, as described under Install. After that the line shows in the app too.
+
 ## Why it exists
 
 Every message you send makes Claude Code send the whole conversation again. The prompt cache lets the model reuse what it already read, so you mostly pay for what's new. A cache only lasts a fixed time after Claude's last reply:
@@ -33,41 +93,6 @@ These rules come from 30 days of one heavy user's sessions (1,341 idle gaps of a
 - Compacting while away didn't pay for itself. Claude Code's own idle compaction fired only in the terminal, and the first message back still missed the cache.
 
 The details are in Claude Code's [prompt caching docs](https://code.claude.com/docs/en/prompt-caching).
-
-## Install
-
-In Claude Code running in a terminal, type:
-
-```
-/plugin install afk-timer --marketplace tlq5l/afk-timer
-```
-
-Press `y` to add the marketplace, then Enter to install for your user. If it asks about the one setting, or says an option isn't set, leave it: it uses `auto`. It starts working right away. The desktop app's Code tab doesn't accept that command, but once you install it from a terminal the line shows there too.
-
-It needs a Claude Code version with function-hook mods (early access; built and tested on 2.1.296).
-
-## What it shows
-
-- **`AFK for 23 min · cache expires in 37 min`**: you haven't typed, sent or clicked anything for 5 minutes. The two numbers count from different moments: AFK from your last action, the cache from Claude's last reply.
-- **`You were AFK for 23 min`** (dim): shown for 10 seconds when you come back.
-- **`Cache likely expired …`**: shown once the cache has likely lapsed (dim and calm when the conversation is small), including right after you resume an old session. It stays while you type and goes away when you send your next message, `/clear` or `/compact`.
-
-## Settings
-
-One setting, under `/config`: **Prompt cache lifetime** (`cacheTtl`).
-
-- `auto` (default): 1 hour if your account reports plan usage limits (a subscription), otherwise 5 minutes.
-- `1h` or `5m`: pin it. Use `1h` if you set `promptCacheTtl` to `1h` on an API key. Use `5m` while your subscription is on usage credits.
-
-## Turn it off or remove it
-
-```
-claude plugin disable afk-timer@afk-timer
-```
-
-```
-claude plugin uninstall afk-timer@afk-timer
-```
 
 ## Limits
 
